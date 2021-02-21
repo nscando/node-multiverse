@@ -7,13 +7,13 @@ const db = require('./index')
 
 const prompt = inquirer.createPromptModule()
 
-async function setup() {
+async function setup () {
   const answer = await prompt([
     {
       type: 'confirm',
       name: 'setup',
-      message: 'This will destroy your DB, are you sure?',
-    },
+      message: 'This will destroy your DB, are you sure?'
+    }
   ])
 
   if (!answer.setup) {
@@ -27,7 +27,7 @@ async function setup() {
     host: process.env.DB_HOST || 'localhost',
     dialect: 'postgres',
     logging: (s) => debug(s),
-    setup: true,
+    setup: true
   }
   await db(config).catch(handleFatalError)
 
@@ -36,7 +36,7 @@ async function setup() {
   process.exit(0)
 }
 
-function handleFatalError(err) {
+function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
   console.error(err.stack)
   process.exit(1)

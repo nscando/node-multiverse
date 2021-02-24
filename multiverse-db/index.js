@@ -12,11 +12,11 @@ module.exports = async function (config) {
     pool: {
       max: 10,
       min: 0,
-      idle: 10000,
+      idle: 10000
     },
     query: {
-      raw: true,
-    },
+      raw: true
+    }
   })
 
   const sequelize = setupDatabase(config)
@@ -37,6 +37,6 @@ module.exports = async function (config) {
 
   return {
     Agent,
-    Metric,
+    Metric
   }
 }

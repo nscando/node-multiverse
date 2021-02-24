@@ -9,7 +9,7 @@ const agent = {
   pid: 0,
   connected: true,
   createdAt: new Date(),
-  updatedAt: new Date(),
+  updatedAt: new Date()
 }
 
 const agents = [
@@ -18,20 +18,20 @@ const agents = [
     id: 2,
     uuid: 'yyy-yyy-yyw',
     connected: false,
-    username: 'test',
+    username: 'test'
   }),
   extend(agent, {
     id: 3,
-    uuid: 'yyy-yyy-yyx',
+    uuid: 'yyy-yyy-yyx'
   }),
   extend(agent, {
     id: 4,
     uuid: 'yyy-yyy-yyz',
-    username: 'test',
-  }),
+    username: 'test'
+  })
 ]
 
-function extend(obj, values) {
+function extend (obj, values) {
   const clone = Object.assign({}, obj)
   return Object.assign(clone, values)
 }
@@ -42,5 +42,5 @@ module.exports = {
   connected: agents.filter((a) => a.connected),
   nico: agents.filter((a) => a.username === 'nico'),
   byUuid: (id) => agents.filter((a) => a.uuid === id).shift(),
-  byId: (id) => agents.filter((a) => a.id === id).shift(),
+  byId: (id) => agents.filter((a) => a.id === id).shift()
 }

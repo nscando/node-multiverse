@@ -99,7 +99,6 @@ server.on('published', async (packet, client) => {
         }
       }
       break
-    default:
   }
 })
 

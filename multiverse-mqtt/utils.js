@@ -1,6 +1,6 @@
 'use strict'
 
-function parsePayload(payload) {
+function parsePayload (payload) {
   if (payload instanceof Buffer) {
     payload = payload.toString('utf8')
   }
@@ -15,5 +15,5 @@ function parsePayload(payload) {
 }
 
 module.exports = {
-  parsePayload,
+  parsePayload
 }

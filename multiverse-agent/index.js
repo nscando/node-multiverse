@@ -69,7 +69,7 @@ class MultiverseAgent extends EventEmitter {
             }
 
             for (let [metric, fn] of this._metrics) {
-              if (fn.length == 1) {
+              if (fn.length === 1) {
                 fn = util.promisify(fn)
               }
 
@@ -78,38 +78,34 @@ class MultiverseAgent extends EventEmitter {
                 value: await Promise.resolve(fn()),
               })
             }
+
+            debug('Sending', message)
+
+            this._client.publish('agent/message', JSON.stringify(message))
+            this.emit('message', message)
           }
-
-          debug('Sending', message)
-
-          this._client.publish('agent/message', JSON.stringify(message))
-          this.emit('message', message)
-
-          this.emit('agent/message', 'this is the message')
         }, opts.interval)
       })
 
       this._client.on('message', (topic, payload) => {
         payload = parsePayload(payload)
-        let brodcast = false
 
+        let broadcast = false
         switch (topic) {
           case 'agent/connected':
           case 'agent/disconnected':
           case 'agent/message':
-            brodcast =
+            broadcast =
               payload && payload.agent && payload.agent.uuid !== this._agentId
             break
         }
 
-        if (brodcast) {
+        if (broadcast) {
           this.emit(topic, payload)
         }
       })
 
-      this._client.on('error', () => {
-        this.disconnect()
-      })
+      this._client.on('error', () => this.disconnect())
     }
   }
 

@@ -1,0 +1,24 @@
+{
+  "name": "multiverse-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A simple IoT platform - Agent",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "lint-fix": "standard --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicolas Scandizzo",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^16.0.3"
+  },
+  "dependencies": {
+    "debug": "^4.3.1",
+    "default": "^0.1.1",
+    "mqtt": "^4.2.6",
+    "multiverse-utils": "file:../multiverse-utils",
+    "uuid": "^8.3.2"
+  }
+}

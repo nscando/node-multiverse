@@ -1,30 +1,24 @@
-# multiverse-agent
-
-## Usage
-
-```js
-const MultiverseAgent = require('multiverse-agent')
+const MultiverseAgent = require('../')
 
 const agent = new MultiverseAgent({
-  name:'myapp',
-  username: 'admin'
+  name: 'myapp',
+  username: 'admin',
   interval: 2000,
 })
 
-agent.addMetric('rss', function getRss () {
+agent.addMetric('rss', function getRss() {
   return process.memoryUsage().rss
 })
 
-agent.addMetric('promiseMetric', function getRandomPromise () {
+agent.addMetric('promiseMetric', function getRandomPromise() {
   return Promise.resolve(Math.random())
 })
 
-agent.addMetric('callbackMetric', function getRandomCallback (callback) {
+agent.addMetric('callbackMetric', function getRandomCallback(callback) {
   setTimeout(() => {
     callback(null, Math.random())
   }, 1000)
 })
-
 
 agent.connect()
 
@@ -36,9 +30,10 @@ agent.on('message', handler)
 // Events from other Agents - Mqqt server
 agent.on('agent/connected', handler)
 agent.on('agent/disconnected', handler)
-agent.on('agent/message', (payload) => {
-  console.log(payload)
-})
+agent.on('agent/message', handler)
 
-setTimeout(() => agent.disconnect(), 20000)
-```
+function handler(payload) {
+  console.log(payload)
+}
+
+setTimeout(() => agent.disconnect(), 10000)

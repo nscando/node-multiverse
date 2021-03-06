@@ -2,16 +2,39 @@
 
 const debug = require('debug')('multiverse:api:routes')
 const express = require('express')
+const asyncify = require('express-asyncify')
+const db = require('multiverse-db')
+const config = require('./config')
 
-const api = express.Router()
+const api = asyncify(express.Router())
+
+let services, Agent, Metric
+
+api.use('*', async (req, res, next) => {
+  if (!services) {
+    debug('Connecting to DB')
+    try {
+      services = await db(config)
+    } catch (e) {
+      return next(e)
+    }
+    Agent = services.Agent
+    Metric = services.Metric
+  }
+  next()
+})
 
 api.get('/agents', (req, res) => {
   debug('A request has come to /agents')
   res.send({})
 })
 
-api.get('/agents/:uuid', (req, res) => {
+api.get('/agent/:uuid', (req, res, next) => {
   const { uuid } = req.params
+
+  if (uuid !== 'yyy') {
+    return next(new Error('Agent not found'))
+  }
   res.send({ uuid })
 })
 

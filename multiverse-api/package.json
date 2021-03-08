@@ -26,6 +26,8 @@
     "debug": "^3.2.7",
     "express": "^4.17.1",
     "express-asyncify": "^1.0.1",
+    "express-jwt": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
     "multiverse-db": "file:../multiverse-db"
   }
 }

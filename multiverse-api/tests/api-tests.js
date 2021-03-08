@@ -54,7 +54,7 @@ test.serial.cb('/api/agents', (t) => {
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
-      t.falsy(err, 'should not retunr an error')
+      t.falsy(err, 'should not return an error')
       let body = JSON.stringify(res.body)
       let expected = JSON.stringify(agentFixtures.connected)
       t.deepEqual(body, expected, 'response body should be the expect')

@@ -1,15 +1,21 @@
 'use strict'
 
 const test = require('ava')
+const util = require('util')
 const request = require('supertest')
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 
 const agentFixtures = require('./fixtures/agent')
+const auth = require('../auth')
+const config = require('../config')
+
+const sign = util.promisify(auth.sign)
 
 let sandbox = null
 let server = null
 let dbStub = null
+let token = null
 let AgentStub = {}
 let MetricStub = {}
 let uuid = 'yyy-yyy-yyy'
@@ -27,6 +33,8 @@ test.beforeEach(async () => {
 
   AgentStub.findConnected = sandbox.stub()
   AgentStub.findConnected.returns(Promise.resolve(agentFixtures.connected))
+
+  token = await sign({ admin: true, username: 'nico' }, config.auth.secret)
 
   AgentStub.findByUuid = sandbox.stub()
   AgentStub.findByUuid
@@ -51,6 +59,7 @@ test.afterEach(async () => {
 test.serial.cb('/api/agents', (t) => {
   request(server)
     .get('/api/agents')
+    .set('Authorization', `Bearer ${token}`)
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
@@ -58,6 +67,23 @@ test.serial.cb('/api/agents', (t) => {
       let body = JSON.stringify(res.body)
       let expected = JSON.stringify(agentFixtures.connected)
       t.deepEqual(body, expected, 'response body should be the expect')
+      t.end()
+    })
+})
+
+test.serial.cb('/api/agents - Unauthorized', (t) => {
+  request(server)
+    .get('/api/agents')
+    .expect(500)
+    .expect('Content-Type', /json/)
+    .end((err, res) => {
+      t.falsy(err, 'should not return an error')
+      let body = res.body
+      t.regex(
+        body.error,
+        /No authorization/,
+        'should have UNAUTHORIZED on error'
+      )
       t.end()
     })
 })

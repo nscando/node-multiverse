@@ -8,7 +8,7 @@ const defaults = require('defaults')
 const uuid = require('uuid')
 const EventEmitter = require('events')
 
-const { parsePayload } = require('./utils')
+const { parsePayload } = require('multiverse-utils')
 
 const options = {
   name: 'untitled',

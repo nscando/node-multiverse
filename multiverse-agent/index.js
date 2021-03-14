@@ -15,7 +15,7 @@ const options = {
   username: 'nico',
   interval: 3000,
   mqtt: {
-    host: 'mqtt://localhost:1813',
+    host: 'mqtt://localhost:1880',
   },
 }
 

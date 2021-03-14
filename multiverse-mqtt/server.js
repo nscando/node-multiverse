@@ -15,7 +15,7 @@ const backend = {
 }
 
 const settings = {
-  port: 1813,
+  port: 1880,
   backend,
 }
 

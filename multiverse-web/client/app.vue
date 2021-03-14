@@ -1,41 +1,40 @@
 <template>
   <div>
-    <agent uuid="yyy"></agent>
-    <metric type="memory" uuid="uuid"></metric>
-    <agent
-      v-for="agent in agents"
-      :uuid="agent.uuid"
-      :key="agent.uuid">
+    <metric
+      uuid="672988c3-c661-488e-a5ea-2ec70285215d"
+      type="callbackMetric"
+      :socket="socket"
+    ></metric>
+    <agent v-for="agent in agents" :uuid="agent.uuid" :key="agent.uuid">
     </agent>
-    <p v-if="error">{{error}}</p>
+    <p v-if="error">{{ error }}</p>
   </div>
 </template>
 
 <style>
-  body {
-    font-family: Arial;
-    background: #f8f8f8;
-    margin: 0;
-  }
+body {
+  font-family: Arial;
+  background: #f8f8f8;
+  margin: 0;
+}
 </style>
 
 <script>
-
+const io = require('socket.io-client')
+const socket = io()
 module.exports = {
-  data () {
+  data() {
     return {
       agents: [],
-      error: null
+      error: null,
+      socket,
     }
   },
-
-  mounted () {
+  mounted() {
     this.initialize()
   },
-
   methods: {
-    initialize () {
-    }
-  }
+    initialize() {},
+  },
 }
 </script>

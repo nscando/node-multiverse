@@ -7,7 +7,7 @@ const express = require('express')
 const asyncify = require('express-asyncify')
 const socketio = require('socket.io')
 const chalk = require('chalk')
-const MultoverseAgent = require('multiverse-agent')
+const MultiverseAgent = require('multiverse-agent')
 
 const proxy = require('./proxy')
 const { pipe } = require('multiverse-utils')
@@ -16,12 +16,11 @@ const port = process.env.PORT || 8080
 const app = asyncify(express())
 const server = http.createServer(app)
 const io = socketio(server)
-const agent = new MultoverseAgent()
+const agent = new MultiverseAgent()
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', proxy)
 
-// Socket.io / WebSockets
 // Socket.io / WebSockets
 io.on('connect', (socket) => {
   debug(`Connected ${socket.id}`)
@@ -35,10 +34,6 @@ app.use((err, req, res, next) => {
 
   if (err.message.match(/not found/)) {
     return res.status(404).send({ error: err.message })
-  }
-
-  if (err.message.match(/unauthorized/)) {
-    return res.status(401).send({ error: err.message })
   }
 
   res.status(500).send({ error: err.message })
@@ -55,9 +50,7 @@ process.on('unhandledRejection', handleFatalError)
 
 server.listen(port, () => {
   console.log(
-    `${chalk.green(
-      '[multiverse-web]'
-    )} server listening on port http://localhost:${chalk.red(port)}`
+    `${chalk.green('[multiverse-web]')} server listening on port ${port}`
   )
   agent.connect()
 })

@@ -14,13 +14,6 @@
   },
   "author": "Nicolas Scandizzo",
   "license": "MIT",
-  "browserify":{
-    "transform":[
-      [
-        "babelify"
-      ]
-    ]
-  },
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
@@ -38,11 +31,14 @@
     "debug": "^3.2.7",
     "express": "^4.17.1",
     "express-asyncify": "^1.0.1",
+    "moment": "^2.29.1",
     "multiverse-agent": "file:../multiverse-agent",
     "multiverse-utils": "file:../multiverse-utils",
+    "random-material-color": "^1.0.5",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
     "socket.io": "^3.1.2",
+    "socket.io-client": "^4.0.0",
     "vue": "^2.6.12",
     "vue-chartjs": "^3.5.1"
   }

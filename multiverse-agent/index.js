@@ -13,9 +13,9 @@ const { parsePayload } = require('multiverse-utils')
 const options = {
   name: 'untitled',
   username: 'nico',
-  interval: 5000,
+  interval: 3000,
   mqtt: {
-    host: 'mqtt://localhost',
+    host: 'mqtt://localhost:1813',
   },
 }
 

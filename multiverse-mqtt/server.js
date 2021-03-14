@@ -7,7 +7,6 @@ const chalk = require('chalk')
 const db = require('multiverse-db')
 
 const { parsePayload } = require('./utils')
-const metric = require('multiverse-db/models/metric')
 
 const backend = {
   type: 'redis',
@@ -16,7 +15,7 @@ const backend = {
 }
 
 const settings = {
-  port: 1883,
+  port: 1813,
   backend,
 }
 
@@ -79,54 +78,50 @@ server.on('published', async (packet, client) => {
       debug(`Payload: ${packet.payload}`)
       break
     case 'agent/message':
-      {
-        debug(`Payload: ${packet.payload}`)
+      debug(`Payload: ${packet.payload}`)
 
-        const payload = parsePayload(packet.payload)
+      const payload = parsePayload(packet.payload)
 
-        if (payload) {
-          payload.agent.connected = true
+      if (payload) {
+        payload.agent.connected = true
 
-          let agent
+        let agent
+        try {
+          agent = await Agent.createOrUpdate(payload.agent)
+        } catch (e) {
+          return handleError(e)
+        }
+
+        debug(`Agent ${agent.uuid} saved`)
+
+        // Notify Agent is Connected
+        if (!clients.get(client.id)) {
+          clients.set(client.id, agent)
+          server.publish({
+            topic: 'agent/connected',
+            payload: JSON.stringify({
+              agent: {
+                uuid: agent.uuid,
+                name: agent.name,
+                hostname: agent.hostname,
+                pid: agent.pid,
+                connected: agent.connected,
+              },
+            }),
+          })
+        }
+
+        // Store Metrics
+        for (let metric of payload.metrics) {
+          let m
+
           try {
-            agent = await Agent.createOrUpdate(payload.agent)
+            m = await Metric.create(agent.uuid, metric)
           } catch (e) {
             return handleError(e)
           }
 
-          debug(`Agent ${agent.uuid} saved`)
-
-          // Notify Agent is Connected
-          if (!clients.get(client.id)) {
-            clients.set(client.id, agent)
-            server.publish({
-              topic: 'agent/connected',
-              payload: JSON.stringify({
-                agent: {
-                  uuid: agent.uuid,
-                  name: agent.name,
-                  hostname: agent.hostname,
-                  pid: agent.pid,
-                  connected: agent.connected,
-                },
-              }),
-            })
-          }
-
-          // Store Metrics
-          await Promise.all(
-            payload.metrics.map(async (metric) => {
-              let m
-
-              try {
-                m = await Metric.create(agent.uuid, metric)
-              } catch (e) {
-                return handleError(e)
-              }
-
-              debug(`Metric ${m.id} saved on agent ${agent.uuid}`)
-            })
-          )
+          debug(`Metric ${m.id} saved on agent ${agent.uuid}`)
         }
       }
       break

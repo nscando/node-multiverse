@@ -6,18 +6,24 @@ const path = require('path')
 const express = require('express')
 const socketio = require('socket.io')
 const chalk = require('chalk')
+const MultoverseAgent = require('multiverse-agent')
+
+const { pipe } = require('multiverse-utils')
 
 const port = process.env.PORT || 8080
 const app = express()
-
 const server = http.createServer(app)
 const io = socketio(server)
+const agent = new MultoverseAgent()
 
-app.use(express.static(path.join(__dirname, './public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
+// Socket.io / WebSockets
 // Socket.io / WebSockets
 io.on('connect', (socket) => {
   debug(`Connected ${socket.id}`)
+
+  pipe(agent, socket)
 })
 
 function handleFatalError(err) {
@@ -29,10 +35,9 @@ function handleFatalError(err) {
 process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(
-    `${chalk.green(
-      '[multiverse-web]'
-    )} server listening on port http://localhost:${chalk.red(port)}`
+    `${chalk.green('[multiverse-web]')} server listening on port ${port}`
   )
+  agent.connect()
 })

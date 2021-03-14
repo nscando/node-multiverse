@@ -20,6 +20,8 @@
     "chalk": "^4.1.0",
     "debug": "^3.2.7",
     "express": "^4.17.1",
+    "multiverse-agent": "file:../multiverse-agent",
+    "multiverse-utils": "file:../multiverse-utils",
     "socket.io": "^3.1.2"
   }
 }

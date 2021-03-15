@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".metrics-title {\n  text-align: center;\n  font-size: 28px;\n  letter-spacing: 1px;\n  font-family: 'Monserrat', sans-serif;\n}\n.button {\n  text-transform: uppercase;\n  color: #ff7a22;\n  border: none;\n  background: none;\n  font-size: 14px;\n  font-weight: 900;\n  cursor: pointer;\n  outline: 0;\n  padding: 0;\n  font-family: 'Roboto', sans-serif;\n}\n.agent {\n  max-width: 850px;\n  box-sizing: border-box;\n  border-radius: 4px;\n  background: white;\n  padding: 20px;\n  font-family: 'Roboto', sans-serif;\n  margin: 24px 15px;\n  box-shadow: 0 1px 3px 0 rgba(165, 165, 165, 0.2), 0 2px 2px 0 rgba(163, 137, 137, 0.12), 0 0 2px 0 rgba(0, 0, 0, 0.14);\n}\n.agent-title {\n  font-size: 32px;\n  letter-spacing: 1px;\n  margin: 0;\n  font-family: 'Monserrat', sans-serif;\n}\n.agent-host {\n  font-size: 20px;\n}\n.agent-status {\n  font-size: 20px\n}\n.agent-status span {\n  font-weight: bold;\n  color: #ff7a22;\n}\n@media screen and (min-width: 850px) {\n  .agent {\n    padding: 20px 85px;\n    margin: 24px auto;\n  }\n}")
+var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".metrics-title {\n  text-align: center;\n  font-size: 28px;\n  letter-spacing: 1px;\n  font-family: 'Monserrat', sans-serif;\n}\n.button {\n  text-transform: uppercase;\n  color: #ff7a22;\n  border: none;\n  background: none;\n  font-size: 14px;\n  font-weight: 900;\n  cursor: pointer;\n  outline: 0;\n  padding: 0;\n  font-family: 'Roboto', sans-serif;\n}\n.agent {\n  max-width: 850px;\n  box-sizing: border-box;\n  border-radius: 4px;\n  background: white;\n  padding: 20px;\n  font-family: 'Roboto', sans-serif;\n  margin: 24px 15px;\n  box-shadow: 0 1px 3px 0 rgba(165, 165, 165, 0.2),\n    0 2px 2px 0 rgba(163, 137, 137, 0.12), 0 0 2px 0 rgba(0, 0, 0, 0.14);\n}\n.agent-title {\n  font-size: 32px;\n  letter-spacing: 1px;\n  margin: 0;\n  font-family: 'Monserrat', sans-serif;\n}\n.agent-host {\n  font-size: 20px;\n}\n.agent-status {\n  font-size: 20px;\n}\n.agent-status span {\n  font-weight: bold;\n  color: #ff7a22;\n}\n@media screen and (min-width: 850px) {\n  .agent {\n    padding: 20px 85px;\n    margin: 24px auto;\n  }\n}")
 ;(function(){
 //
 //
@@ -75,19 +75,25 @@ var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".metrics
 //
 //
 //
+//
+//
+//
+//
 
+const request = require('request-promise-native')
 
 module.exports = {
-  props: [ 'uuid' ],
+  props: ['uuid', 'socket'],
 
   data() {
     return {
       name: null,
       hostname: null,
       connected: false,
+      pid: null,
       showMetrics: false,
       error: null,
-      metrics: []
+      metrics: [],
     }
   },
 
@@ -96,20 +102,63 @@ module.exports = {
   },
 
   methods: {
-    initialize() {
+    async initialize() {
+      const { uuid } = this
+
+      const options = {
+        method: 'GET',
+        url: `http://localhost:8080/agent/${uuid}`,
+        json: true,
+      }
+
+      let agent
+
+      try {
+        result = await requests(options)
+      } catch (e) {
+        this.error = e.error.error
+        return
+      }
+
+      this.name = agent.name
+      this.hostname = agent.hostname
+      this.connected = agent.connected
+      this.pid = agent.pid
+
+      this.loadMetrics()
+    },
+
+    async loadMetrics() {
+      const { uuid } = this
+
+      const options = {
+        method: 'GET',
+        url: `http://localhost:8080/metrics/${uuid}`,
+        json: true,
+      }
+      let metrics
+
+      try {
+        metrics = await request(options)
+      } catch (e) {
+        this.error = e.error.error
+        return
+      }
+
+      this.metrics = metrics
     },
 
     toggleMetrics() {
       this.showMetrics = this.showMetrics ? false : true
-    }
-  }
+    },
+  },
 }
 
 })()
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"agent"},[_c('div',[_c('h2',{staticClass:"agent-title"},[_vm._v(_vm._s(_vm.name)+" ("+_vm._s(_vm.pid)+")")]),_vm._v(" "),_c('p',{staticClass:"agent-host"},[_vm._v(_vm._s(_vm.hostname))]),_vm._v(" "),_c('p',{staticClass:"agent-status"},[_vm._v("Connected: "),_c('span',[_vm._v(_vm._s(_vm.connected))])]),_vm._v(" "),_c('button',{staticClass:"button",on:{"click":_vm.toggleMetrics}},[_vm._v("Toggle Metrics")]),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showMetrics),expression:"showMetrics"}]},[_c('h3',{staticClass:"metrics-title"},[_vm._v("Metrics")]),_vm._v(" "),_vm._l((_vm.metrics),function(metric){return _c('metric',{key:metric.type,attrs:{"uuid":_vm.uuid,"type":metric.type}})})],2)]),_vm._v(" "),(_vm.error)?_c('p',[_vm._v(_vm._s(_vm.error))]):_vm._e()])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"agent"},[_c('div',[_c('h2',{staticClass:"agent-title"},[_vm._v(_vm._s(_vm.name)+" ("+_vm._s(_vm.pid)+")")]),_vm._v(" "),_c('p',{staticClass:"agent-host"},[_vm._v(_vm._s(_vm.hostname))]),_vm._v(" "),_c('p',{staticClass:"agent-status"},[_vm._v("\n      Connected: "),_c('span',[_vm._v(_vm._s(_vm.connected))])]),_vm._v(" "),_c('button',{staticClass:"button",on:{"click":_vm.toggleMetrics}},[_vm._v("Toggle Metrics")]),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showMetrics),expression:"showMetrics"}]},[_c('h3',{staticClass:"metrics-title"},[_vm._v("Metrics")]),_vm._v(" "),_vm._l((_vm.metrics),function(metric){return _c('metric',{key:metric.type,attrs:{"uuid":_vm.uuid,"socket":_vm.socket,"type":metric.type}})})],2)]),_vm._v(" "),(_vm.error)?_c('p',[_vm._v(_vm._s(_vm.error))]):_vm._e()])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -122,7 +171,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-5fab9b48", __vue__options__)
   }
 })()}
-},{"vue":492,"vue-hot-reload-api":490,"vueify/lib/insert-css":494}],2:[function(require,module,exports){
+},{"request-promise-native":361,"vue":492,"vue-hot-reload-api":490,"vueify/lib/insert-css":494}],2:[function(require,module,exports){
 'use strict';
 
 const Vue = require('vue');
@@ -169,6 +218,12 @@ var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert("body {\n
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 const io = require('socket.io-client')
 const socket = io()
@@ -192,7 +247,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('metric',{attrs:{"uuid":"672988c3-c661-488e-a5ea-2ec70285215d","type":"callbackMetric","socket":_vm.socket}}),_vm._v(" "),_vm._l((_vm.agents),function(agent){return _c('agent',{key:agent.uuid,attrs:{"uuid":agent.uuid}})}),_vm._v(" "),(_vm.error)?_c('p',[_vm._v(_vm._s(_vm.error))]):_vm._e()],2)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('agent',{attrs:{"uuid":"62ca4579-ee7b-4e58-bf99-a98342341847","socket":_vm.socket}}),_vm._v(" "),_c('metric',{attrs:{"uuid":"62ca4579-ee7b-4e58-bf99-a98342341847","type":"callbackMetric","socket":_vm.socket}}),_vm._v(" "),_vm._l((_vm.agents),function(agent){return _c('agent',{key:agent.uuid,attrs:{"uuid":agent.uuid,"socket":_vm.socket}})}),_vm._v(" "),(_vm.error)?_c('p',[_vm._v(_vm._s(_vm.error))]):_vm._e()],2)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -262,6 +317,7 @@ const request = require('request-promise-native')
 const moment = require('moment')
 const randomColor = require('random-material-color')
 const LineChart = require('./line-chart')
+
 module.exports = {
   name: 'metric',
   components: {

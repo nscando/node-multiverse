@@ -29,6 +29,7 @@ const request = require('request-promise-native')
 const moment = require('moment')
 const randomColor = require('random-material-color')
 const LineChart = require('./line-chart')
+
 module.exports = {
   name: 'metric',
   components: {

@@ -14,6 +14,13 @@
   },
   "author": "Nicolas Scandizzo",
   "license": "MIT",
+  "browserify": {
+    "transform": [
+      [
+        "babelify"
+      ]
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",

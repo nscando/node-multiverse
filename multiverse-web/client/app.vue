@@ -1,16 +1,10 @@
 <template>
   <div>
-    <agent uuid="62ca4579-ee7b-4e58-bf99-a98342341847" :socket="socket"></agent>
-    <metric
-      uuid="62ca4579-ee7b-4e58-bf99-a98342341847"
-      type="callbackMetric"
-      :socket="socket"
-    ></metric>
     <agent
       v-for="agent in agents"
       :uuid="agent.uuid"
-      :socket="socket"
       :key="agent.uuid"
+      :socket="socket"
     >
     </agent>
     <p v-if="error">{{ error }}</p>
@@ -26,8 +20,10 @@ body {
 </style>
 
 <script>
+const request = require('request-promise-native')
 const io = require('socket.io-client')
 const socket = io()
+
 module.exports = {
   data() {
     return {
@@ -40,7 +36,33 @@ module.exports = {
     this.initialize()
   },
   methods: {
-    initialize() {},
+    async initialize() {
+      const options = {
+        method: 'GET',
+        url: `http://localhost:8080/agents`,
+        json: true,
+      }
+
+      let result
+
+      try {
+        result = await request(options)
+      } catch (e) {
+        this.error = e.error.error
+        return
+      }
+
+      this.agents = result
+
+      socket.on('agent/connected', (payload) => {
+        const { uuid } = payload.agent
+        const existing = this.agent.find((a) => a.uuid === uuid)
+
+        if (!existing) {
+          this.agent.push(payload.agent)
+        }
+      })
+    },
   },
 }
 </script>

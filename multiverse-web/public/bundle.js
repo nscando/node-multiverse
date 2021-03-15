@@ -81,10 +81,8 @@ var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".metrics
 //
 
 const request = require('request-promise-native')
-
 module.exports = {
   props: ['uuid', 'socket'],
-
   data() {
     return {
       name: null,
@@ -96,56 +94,57 @@ module.exports = {
       metrics: [],
     }
   },
-
   mounted() {
     this.initialize()
   },
-
   methods: {
     async initialize() {
       const { uuid } = this
-
       const options = {
         method: 'GET',
         url: `http://localhost:8080/agent/${uuid}`,
         json: true,
       }
-
       let agent
-
       try {
-        result = await requests(options)
+        agent = await request(options)
       } catch (e) {
         this.error = e.error.error
         return
       }
-
       this.name = agent.name
       this.hostname = agent.hostname
       this.connected = agent.connected
       this.pid = agent.pid
-
       this.loadMetrics()
     },
-
     async loadMetrics() {
       const { uuid } = this
-
       const options = {
         method: 'GET',
         url: `http://localhost:8080/metrics/${uuid}`,
         json: true,
       }
       let metrics
-
       try {
         metrics = await request(options)
       } catch (e) {
         this.error = e.error.error
         return
       }
-
       this.metrics = metrics
+
+      this.startRealtime()
+    },
+
+    startRealtime() {
+      const { uuid, socket } = this
+
+      socket.on('agent/disconnected', (payload) => {
+        if (payload.agent.uuid === uuid) {
+          this.connected = false
+        }
+      })
     },
 
     toggleMetrics() {
@@ -218,15 +217,11 @@ var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert("body {\n
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
+const request = require('request-promise-native')
 const io = require('socket.io-client')
 const socket = io()
+
 module.exports = {
   data() {
     return {
@@ -239,7 +234,33 @@ module.exports = {
     this.initialize()
   },
   methods: {
-    initialize() {},
+    async initialize() {
+      const options = {
+        method: 'GET',
+        url: `http://localhost:8080/agents`,
+        json: true,
+      }
+
+      let result
+
+      try {
+        result = await request(options)
+      } catch (e) {
+        this.error = e.error.error
+        return
+      }
+
+      this.agents = result
+
+      socket.on('agent/connected', (payload) => {
+        const { uuid } = payload.agent
+        const existing = this.agent.find((a) => a.uuid === uuid)
+
+        if (!existing) {
+          this.agent.push(payload.agent)
+        }
+      })
+    },
   },
 }
 
@@ -247,7 +268,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('agent',{attrs:{"uuid":"62ca4579-ee7b-4e58-bf99-a98342341847","socket":_vm.socket}}),_vm._v(" "),_c('metric',{attrs:{"uuid":"62ca4579-ee7b-4e58-bf99-a98342341847","type":"callbackMetric","socket":_vm.socket}}),_vm._v(" "),_vm._l((_vm.agents),function(agent){return _c('agent',{key:agent.uuid,attrs:{"uuid":agent.uuid,"socket":_vm.socket}})}),_vm._v(" "),(_vm.error)?_c('p',[_vm._v(_vm._s(_vm.error))]):_vm._e()],2)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._l((_vm.agents),function(agent){return _c('agent',{key:agent.uuid,attrs:{"uuid":agent.uuid,"socket":_vm.socket}})}),_vm._v(" "),(_vm.error)?_c('p',[_vm._v(_vm._s(_vm.error))]):_vm._e()],2)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -260,7 +281,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-17f0f324", __vue__options__)
   }
 })()}
-},{"socket.io-client":391,"vue":492,"vue-hot-reload-api":490,"vueify/lib/insert-css":494}],4:[function(require,module,exports){
+},{"request-promise-native":361,"socket.io-client":391,"vue":492,"vue-hot-reload-api":490,"vueify/lib/insert-css":494}],4:[function(require,module,exports){
 'use strict';
 
 const {

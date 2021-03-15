@@ -23,7 +23,6 @@ body {
 const request = require('request-promise-native')
 const io = require('socket.io-client')
 const socket = io()
-
 module.exports = {
   data() {
     return {
@@ -39,27 +38,22 @@ module.exports = {
     async initialize() {
       const options = {
         method: 'GET',
-        url: `http://localhost:8080/agents`,
+        url: 'http://localhost:8080/agents',
         json: true,
       }
-
       let result
-
       try {
         result = await request(options)
       } catch (e) {
         this.error = e.error.error
         return
       }
-
       this.agents = result
-
       socket.on('agent/connected', (payload) => {
         const { uuid } = payload.agent
-        const existing = this.agent.find((a) => a.uuid === uuid)
-
+        const existing = this.agents.find((a) => a.uuid === uuid)
         if (!existing) {
-          this.agent.push(payload.agent)
+          this.agents.push(payload.agent)
         }
       })
     },

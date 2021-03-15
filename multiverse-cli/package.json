@@ -1,0 +1,22 @@
+{
+  "name": "multiverse-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Simple IoT Platform - CLI",
+  "bin": "multiverse.js",
+  "scripts": {
+    "lint": "standard",
+    "lint-fix": "standard --fix"
+  },
+  "author": "Nicolas Scandizzo <nicolas.scandizzo@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^16.0.3"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.21",
+    "moment": "^2.29.1",
+    "multiverse-agent": "file:../multiverse-agent"
+  }
+}

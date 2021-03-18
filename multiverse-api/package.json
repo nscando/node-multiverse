@@ -11,6 +11,10 @@
     "lint-fix": "standard --fix",
     "test": "DEBUG=multiverse:*  ava tests/* --verboose"
   },
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/nscando/multiverse"
+  },
   "author": "Nicolas Scandizzo",
   "license": "MIT",
   "devDependencies": {

@@ -9,6 +9,10 @@
     "lint-fix": "standard --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/nscando/multiverse"
+  },
   "author": "Nicolas Scandizzo",
   "license": "MIT",
   "devDependencies": {

@@ -1,5 +1,7 @@
 'use strict'
 
+/* eslint prefer-const: [0, {"destructuring": "all"}] */
+
 const debug = require('debug')('multiverse:web')
 const http = require('http')
 const path = require('path')
@@ -39,7 +41,7 @@ app.use((err, req, res, next) => {
   res.status(500).send({ error: err.message })
 })
 
-function handleFatalError(err) {
+function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
   console.error(err.stack)
   process.exit(1)

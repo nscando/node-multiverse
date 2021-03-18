@@ -1,4 +1,5 @@
 'use strict'
+/* eslint prefer-const: [0, {"destructuring": "all"}] */
 
 const test = require('ava')
 const sinon = require('sinon')
@@ -7,10 +8,10 @@ const proxyquire = require('proxyquire')
 const agentFixtures = require('./fixtures/agent')
 
 const config = {
-  logging: function () {},
+  logging: function () {}
 }
 const MetricStub = {
-  belongsTo: sinon.spy(),
+  belongsTo: sinon.spy()
 }
 
 const id = 1
@@ -25,8 +26,8 @@ let usernameArgs = { where: { username: 'nico', connected: true } }
 let connectedArgs = { where: { connected: true } }
 let uuidArgs = {
   where: {
-    uuid,
-  },
+    uuid
+  }
 }
 let newAgent = {
   uuid: '123-123-123',
@@ -34,23 +35,23 @@ let newAgent = {
   username: 'test',
   hostname: 'test',
   pid: 0,
-  connected: false,
+  connected: false
 }
 
 test.beforeEach(async () => {
   sandbox = sinon.createSandbox()
 
   AgentStub = {
-    hasMany: sandbox.spy(),
+    hasMany: sandbox.spy()
   }
 
   // Model create Stub
   AgentStub.create = sandbox.stub()
   AgentStub.create.withArgs(newAgent).returns(
     Promise.resolve({
-      toJSON() {
+      toJSON () {
         return newAgent
-      },
+      }
     })
   )
 
@@ -82,7 +83,7 @@ test.beforeEach(async () => {
 
   const setupDatabase = proxyquire('../', {
     './models/agent': () => AgentStub,
-    './models/metric': () => MetricStub,
+    './models/metric': () => MetricStub
   })
 
   db = await setupDatabase(config)
@@ -216,7 +217,7 @@ test.serial('Agent#createOrUpdate - new', async (t) => {
   t.true(AgentStub.findOne.calledOnce, 'findOne should be called once')
   t.true(
     AgentStub.findOne.calledWith({
-      where: { uuid: newAgent.uuid },
+      where: { uuid: newAgent.uuid }
     }),
     'findOne should be called with uuid args'
   )

@@ -1,4 +1,5 @@
 'use strict'
+/* eslint prefer-const: [0, {"destructuring": "all"}] */
 
 const test = require('ava')
 const util = require('util')
@@ -27,7 +28,7 @@ test.beforeEach(async () => {
   dbStub.returns(
     Promise.resolve({
       Agent: AgentStub,
-      Metric: MetricStub,
+      Metric: MetricStub
     })
   )
 
@@ -43,10 +44,10 @@ test.beforeEach(async () => {
   AgentStub.findByUuid.withArgs(wrongUuid).returns(Promise.resolve(null))
 
   const api = proxyquire('../api', {
-    'multiverse-db': dbStub,
+    'multiverse-db': dbStub
   })
   server = proxyquire('../server', {
-    './api': api,
+    './api': api
   })
 })
 

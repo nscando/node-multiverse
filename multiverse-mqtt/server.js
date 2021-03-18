@@ -1,5 +1,7 @@
 'use strict'
 
+/* eslint prefer-const: [0, {"destructuring": "all"}] */
+
 const debug = require('debug')('multiverse:mqtt')
 const mosca = require('mosca')
 const redis = require('redis')
@@ -11,12 +13,12 @@ const { parsePayload } = require('./utils')
 const backend = {
   type: 'redis',
   redis,
-  return_buffers: true,
+  return_buffers: true
 }
 
 const settings = {
   port: 1880,
-  backend,
+  backend
 }
 
 const config = {
@@ -25,7 +27,7 @@ const config = {
   password: process.env.DB_PASS || 'nico',
   host: process.env.DB_HOST || 'localhost',
   dialect: 'postgres',
-  logging: (s) => debug(s),
+  logging: (s) => debug(s)
 }
 
 const server = new mosca.Server(settings)
@@ -59,9 +61,9 @@ server.on('clientDisconnected', async (client) => {
       topic: 'agent/disconnected',
       payload: JSON.stringify({
         agent: {
-          uuid: agent.uuid,
-        },
-      }),
+          uuid: agent.uuid
+        }
+      })
     })
     debug(
       `Client (${client.id}) associated to Agent (${agent.uuid}) marked as disconnected`
@@ -105,9 +107,9 @@ server.on('published', async (packet, client) => {
                 name: agent.name,
                 hostname: agent.hostname,
                 pid: agent.pid,
-                connected: agent.connected,
-              },
-            }),
+                connected: agent.connected
+              }
+            })
           })
         }
 
@@ -139,13 +141,13 @@ server.on('ready', async () => {
 
 server.on('error', handleFatalError)
 
-function handleFatalError(err) {
+function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
   console.error(err.stack)
   process.exit(1)
 }
 
-function handleError(err) {
+function handleError (err) {
   console.error(`${chalk.red('[error]')} ${err.message}`)
   console.error(err.stack)
 }

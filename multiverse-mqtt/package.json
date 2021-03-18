@@ -10,6 +10,10 @@
     "lint": "standard",
     "lint-fix": "standard --fix"
   },
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/nscando/multiverse"
+  },
   "author": "Nicolas Scandizzo",
   "license": "MIT",
   "devDependencies": {

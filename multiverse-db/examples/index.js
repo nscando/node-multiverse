@@ -2,13 +2,13 @@
 const chalk = require('chalk')
 const db = require('../')
 
-async function run() {
+async function run () {
   const config = {
     database: process.env.DB_NAME || 'multiverse',
     username: process.env.DB_USER || 'nico',
     password: process.env.DB_PASS || 'nico',
     host: process.env.DB_HOST || 'localhost',
-    dialect: 'postgres',
+    dialect: 'postgres'
   }
 
   const { Agent, Metric } = await db(config).catch(handleFatalError)
@@ -19,7 +19,7 @@ async function run() {
     username: 'nico',
     hostname: 'nico',
     pid: 3,
-    connected: true,
+    connected: true
   }).catch(handleFatalError)
 
   console.log('--agent--')
@@ -37,7 +37,7 @@ async function run() {
 
   const metric = await Metric.create(agent.uuid, {
     type: 'memory',
-    value: '300',
+    value: '300'
   }).catch(handleFatalError)
 
   console.log('--metrics--')
@@ -52,7 +52,7 @@ async function run() {
   console.log(metricsType)
 }
 
-function handleFatalError(err) {
+function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
   console.error(err.stack)
   process.exit(1)

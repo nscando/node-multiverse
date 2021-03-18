@@ -1,0 +1,12 @@
+postgresql_databases:
+  - name: multiverse
+    owner: nico
+    hstore: yes
+postgresql_users:
+  - name: nico
+    pass: nico
+    encrypted: yes
+postgresql_user_privileges:
+  - name: nico
+    db: multiverse
+    priv: "ALL"

@@ -1,0 +1,20 @@
+---
+- include: deps.yml
+- name: Copying multiverse-mqtt
+  copy:
+    src=multiverse-mqtt
+    dest=/usr/local/src
+    mode=u=rwx,g=rwx,o=rx
+- name: Running npm install
+  command: npm install
+    chdir=/usr/local/src/multiverse-mqtt
+    creates=/usr/local/src/multiverse-mqtt/node_modules
+- name: Install systemd script
+  copy:
+    src=multiverse-mqtt.service
+    dest=/lib/systemd/system
+- name: Start multiverse-mqtt
+  service:
+    name=multiverse-mqtt
+    state=restarted
+    enabled=yes

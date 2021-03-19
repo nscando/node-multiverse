@@ -1,0 +1,14 @@
+[Unit]
+Description=Multiverse MQTT
+After=network.target
+
+[Service]
+Enviroment=NODE_ENV=production
+Type=simple
+User=root
+WorkingDirectory=/usr/local/src/multiverse-mqtt
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+---
+- include: deps.yml
+- name: Copy multiverse-agent
+  copy:
+    src=multiverse-agent
+    dest=/usr/local/src
+    mode=u=rwx,g=rwx,o=rx
+- name: Run npm install
+  command: npm install -g npm@latest
+    chdir=/usr/local/src/multiverse-agent
+    creates=/usr/local/src/multiverse-agent/node_modules

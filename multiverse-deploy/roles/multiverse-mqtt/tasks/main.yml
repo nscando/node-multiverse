@@ -6,7 +6,7 @@
     dest=/usr/local/src
     mode=u=rwx,g=rwx,o=rx
 - name: Running npm install
-  command: npm install
+  command: npm install -g npm@latest
     chdir=/usr/local/src/multiverse-mqtt
     creates=/usr/local/src/multiverse-mqtt/node_modules
 - name: Install systemd script

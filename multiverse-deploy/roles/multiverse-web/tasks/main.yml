@@ -1,0 +1,28 @@
+---
+- include: deps.yml
+- name: Copying multiverse-web
+  copy:
+    src=multiverse-web
+    dest=/usr/local/src
+    mode=u=rwx,g=rwx,o=rx
+- name: Running npm install
+  command: npm install
+    chdir=/usr/local/src/multiverse-web
+    creates=/usr/local/src/multiverse-web/node_modules
+- name: Install systemd script
+  copy:
+    src=multiverse-web.service
+    dest=/lib/systemd/system
+- name: Install nginx config
+  copy:
+    src=multiverse-web.conf
+    dest=/etc/nginx/sites-enabled
+- name: Start multiverse-web
+  service:
+    name=multiverse-web
+    state=restarted
+    enabled=yes
+- name: Restart nginx
+  service:
+    name=nginx
+    state=reloaded

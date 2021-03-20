@@ -4,10 +4,10 @@
   "description": "A simple IoT Platform - DB Module",
   "main": "index.js",
   "scripts": {
-    "setup": "DEBUG=multiverse:* node setup.js",
-    "test": "DEBUG=multiverse:* nyc --reporter=lcov ava tests/* --verboose",
     "lint": "standard",
-    "lint-fix": "standard --fix"
+    "lint-fix": "standard --fix",
+    "setup": "DEBUG=multiverse:* node setup.js",
+    "test": "DEBUG=multiverse:* nyc --reporter=lcov ava tests/* --verboose"
   },
   "repository": {
     "type": "git",

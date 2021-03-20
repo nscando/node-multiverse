@@ -1,0 +1,50 @@
+{
+  "name": "multiverse-web",
+  "version": "1.0.0",
+  "description": "A Simple IoT Platform - Web Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "NODE_ENV=production node server.js",
+    "prestart": "npm run build",
+    "build": "NODE_ENV=production browserify -g envify -t babelify -t vueify -e client/app.js | terser -c -m -o public/bundle.js",
+    "start-dev": "DEBUG=multiverse:* nodemon server.js",
+    "prestart-dev": "npm run build-dev",
+    "build-dev": "browserify -g envify -t babelify -t vueify -e client/app.js -o public/bundle.js",
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nscando/multiverse"
+  },
+  "author": "Nicolas Scandizzo",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "envify": "^4.1.0",
+    "nodemon": "^2.0.7",
+    "standard": "^16.0.3",
+    "terser": "^5.6.0",
+    "uglify-js": "^3.13.1",
+    "vueify": "^5.0.2"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "chart.js": "^2.9.4",
+    "debug": "^3.2.7",
+    "express": "^4.17.1",
+    "express-asyncify": "^1.0.1",
+    "moment": "^2.29.1",
+    "multiverse-agent": "file:../multiverse-agent",
+    "multiverse-utils": "file:../multiverse-utils",
+    "random-material-color": "^1.0.5",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
+    "socket.io": "^3.1.2",
+    "socket.io-client": "^4.0.0",
+    "vue": "^2.6.12",
+    "vue-chartjs": "^3.5.1"
+  }
+}

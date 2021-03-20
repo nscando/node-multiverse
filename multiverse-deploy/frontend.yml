@@ -1,11 +1,9 @@
 ---
-- hosts: backend-*
+- hosts: frontend-*
   gather_facts: False
   pre_tasks:
     - name: Install Python 3
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
     - setup:
   roles:
-    - database
-    - multiverse-mqtt
-    - multiverse-api
+    - multiverse-web

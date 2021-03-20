@@ -2,8 +2,13 @@
 Description=Multiverse Web
 After=network.target
 
-[Service]
+[Service
 Environment=NODE_ENV=production
+Environment=API_ENDPOINT=http://api.multiverse.space
+Environment=SERVER_HOST=http://multiverse.space
+Environment=MQTT_HOST=mqtt://api.multiverse.space
+
+
 Type=simple
 User=root
 WorkingDirectory=/usr/local/src/multiverse-web
